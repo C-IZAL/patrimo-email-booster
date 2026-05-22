@@ -14,5 +14,6 @@ class Prospect:
 @dataclass
 class ParamsGeneration:
     ton: str = "professionnel"
-    longueur: str = "moyenne"
+    longueur: str = "moyen"
     objection: str | None = None  # objection à traiter (défaut : celle du prospect)
+    signature: str = "[Votre nom]"
