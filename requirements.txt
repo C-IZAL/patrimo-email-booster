@@ -1,0 +1,9 @@
+# Cœur
+anthropic
+python-dotenv
+pyyaml
+
+# Dev / tests
+pytest
+
+# UI (ajouté plus tard) : streamlit
