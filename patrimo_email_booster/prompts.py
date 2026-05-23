@@ -8,18 +8,9 @@ Découpage (cf. SPEC §6 et §8) :
 """
 
 from datetime import date
-from enum import Enum
 
 from .compliance import TERMES_DECONSEILLES
-from .models import ParamsGeneration, Prospect
-
-
-class Variante(Enum):
-    """Les trois angles de relance (SPEC §5)."""
-
-    A = "objection"
-    B = "situation"
-    C = "situation_empathie"
+from .models import ParamsGeneration, Prospect, Variante
 
 
 # Repères de longueur donnés au modèle (SPEC §4), en nombre de mots du corps.
@@ -27,6 +18,13 @@ LONGUEURS = {
     "court": "environ 80 à 120 mots",
     "moyen": "environ 150 à 200 mots",
     "long": "environ 250 à 300 mots",
+}
+
+# Libellés lisibles des variantes, pour l'affichage (SPEC §5).
+TITRES = {
+    Variante.A: "Variante A — Accroche par l'objection",
+    Variante.B: "Variante B — Accroche par la situation",
+    Variante.C: "Variante C — Variante empathique",
 }
 
 
