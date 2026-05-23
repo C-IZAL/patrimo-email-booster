@@ -7,6 +7,7 @@ forme d'onglets, avec indicateur de conformité AMF par variante.
 Lancement : `streamlit run app.py` depuis la racine du projet.
 """
 
+import html
 from datetime import date
 
 import streamlit as st
@@ -22,6 +23,70 @@ from patrimo_email_booster.prompts import LONGUEURS, TONS
 
 
 st.set_page_config(page_title="Patrimo Email Booster", layout="centered")
+
+
+def rendu_corps_email(corps: str) -> None:
+    """Affiche le corps d'un email dans une carte stylée PATRIMO + bouton Copier.
+
+    Le corps n'est injecté qu'à un seul endroit (le <pre>, échappé via
+    html.escape). Le bouton lit le texte depuis le DOM (innerText) plutôt
+    que de le ré-injecter dans un littéral JS, ce qui éviterait toute
+    erreur sur guillemet/apostrophe/backtick et tout second point d'injection.
+    Chaque appel st.iframe crée sa propre iframe : l'id fixe ne collisionne
+    pas entre variantes.
+    """
+    corps_echappe = html.escape(corps)
+    st.iframe(
+        f"""
+        <style>
+          .patrimo-card {{
+            background: #E7ECF2;
+            color: #001233;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            font-size: 15px;
+            line-height: 1.5;
+            padding: 16px 20px;
+            border-radius: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 0 0 12px 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+          }}
+          .patrimo-btn {{
+            background: #023E7D;
+            color: #ffffff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            cursor: pointer;
+          }}
+          .patrimo-btn:hover {{ background: #002855; }}
+          .patrimo-feedback {{
+            margin-left: 12px;
+            color: #023E7D;
+            font-size: 14px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+          }}
+        </style>
+        <pre id="corps-email" class="patrimo-card">{corps_echappe}</pre>
+        <button class="patrimo-btn" onclick="copierCorpsEmail()">Copier</button>
+        <span id="feedback-copie" class="patrimo-feedback"></span>
+        <script>
+          function copierCorpsEmail() {{
+            const texte = document.getElementById('corps-email').innerText;
+            navigator.clipboard.writeText(texte).then(() => {{
+              const fb = document.getElementById('feedback-copie');
+              fb.textContent = 'Copié ✓';
+              setTimeout(() => {{ fb.textContent = ''; }}, 1500);
+            }});
+          }}
+        </script>
+        """,
+        height=400,
+    )
 
 st.title("Patrimo Email Booster")
 st.caption(
@@ -100,11 +165,4 @@ if submitted:
                     "Termes problématiques : "
                     + ", ".join(variante.termes_non_conformes)
                 )
-            st.text_area(
-                "Corps de l'email",
-                value=variante.corps,
-                height=320,
-                disabled=True,
-                label_visibility="collapsed",
-                key=f"corps_{variante.variante.name}",
-            )
+            rendu_corps_email(variante.corps)
