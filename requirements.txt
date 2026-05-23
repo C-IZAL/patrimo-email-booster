@@ -6,4 +6,5 @@ pyyaml
 # Dev / tests
 pytest
 
-# UI (ajouté plus tard) : streamlit
+# UI
+streamlit
