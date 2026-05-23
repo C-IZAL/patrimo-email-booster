@@ -13,6 +13,9 @@ from .compliance import TERMES_DECONSEILLES
 from .models import ParamsGeneration, Prospect, Variante
 
 
+# Tons autorisés pour les variantes A et B (SPEC §4).
+TONS = ["direct", "professionnel", "chaleureux"]
+
 # Repères de longueur donnés au modèle (SPEC §4), en nombre de mots du corps.
 LONGUEURS = {
     "court": "environ 80 à 120 mots",

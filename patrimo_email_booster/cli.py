@@ -9,9 +9,8 @@ import yaml
 
 from .generator import ErreurGeneration, FormatReponseError, generer_variantes
 from .models import ParamsGeneration, Prospect, VarianteGeneree
-from .prompts import LONGUEURS
+from .prompts import LONGUEURS, TONS
 
-TONS = ["direct", "professionnel", "chaleureux"]
 SEPARATEUR = "=" * 70
 
 
